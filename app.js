@@ -398,19 +398,27 @@ function actualizarInfoUsuario() {
         }
     }
 
-    // Actualizar avatar - CARGAR FOTO ESPECÍFICA DEL USUARIO
+    // Actualizar avatar - CON IMAGEN POR DEFECTO PARA ADMIN
     const avatares = document.querySelectorAll('#userAvatar, #avatarPreview');
     avatares.forEach(avatar => {
         if (avatar) {
             // Cargar foto específica del usuario actual
             const fotoGuardada = localStorage.getItem(`fotoPerfil_${usuarioActivo.usuario}`);
+            
             if (fotoGuardada) {
+                // Si el usuario tiene foto personalizada
                 avatar.style.backgroundImage = `url(${fotoGuardada})`;
                 avatar.style.backgroundSize = 'cover';
                 avatar.style.backgroundPosition = 'center';
                 avatar.textContent = '';
+            } else if (usuarioActivo.usuario === 'admin') {
+                // Imagen por defecto para administrador
+                avatar.style.backgroundImage = 'url(Giomarfoto.jpg)';
+                avatar.style.backgroundSize = 'cover';
+                avatar.style.backgroundPosition = 'center';
+                avatar.textContent = '';
             } else {
-                // Si no hay foto, usar iniciales
+                // Para empleados sin foto, usar iniciales
                 avatar.style.backgroundImage = 'none';
                 avatar.style.background = 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)';
                 avatar.textContent = usuarioActivo.nombre.charAt(0).toUpperCase();
@@ -431,7 +439,6 @@ function actualizarInfoUsuario() {
         });
     }
 }
-
 function mostrarInterfazPorRol() {
     if (!usuarioActivo) return;
 
