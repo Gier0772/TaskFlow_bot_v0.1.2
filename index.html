@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Gestión de Tareas Empresariales</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ===== LOGIN OVERLAY ===== -->
+    <div id="login-overlay">
+        <div id="login-container">
+            <div class="login-box">
+                <div class="login-logo">
+                    <img src="Taskflow-sin-fondo.png" alt="Logo TaskFlow" class="logo">
+                    <div class="logo-text">TaskFlow</div>
+                </div>
+                <form id="loginForm">
+                    <input type="text" id="loginUser" placeholder="Usuario" required>
+                    <input type="password" id="loginPass" placeholder="Contraseña" required>
+                    <button type="submit">Ingresar</button>
+                </form>
+                <p id="loginError" class="error-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== DASHBOARD PRINCIPAL ===== -->
+    <div id="dashboard">
+        <aside class="sidebar">
+            <button class="menu-hamburguesa">☰</button>
+            <div class="sidebar-logo">
+                <img src="Taskflow-sin-fondo.png" alt="Logo TaskFlow" class="logo">
+                <div class="logo-text">TaskFlow</div>
+            </div>
+            <nav class="sidebar-menu">
+                <button class="menu-item active" data-section="dashboard-section">Dashboard</button>
+                <button class="menu-item" data-section="tareas-section">Tareas</button>
+                <button class="menu-item admin-only" data-section="empleados-section">Empleados</button>
+                <button class="menu-item" data-section="reportes-section">Reportes</button>
+                <button class="menu-item empleado-only" data-section="mis-tareas-section">Mis Tareas</button>
+                <button class="menu-item empleado-only" data-section="mi-calendario-section">Mi Calendario</button>
+                <button class="menu-item admin-only" data-section="reportes-avanzados-section">Reportes Avanzados</button>
+                <button class="menu-item" data-section="micuenta-section">Mi cuenta</button>
+            </nav>
+            <button class="logout-btn" id="logoutBtn">Cerrar sesión</button>
+        </aside>
+
+        <main class="dashboard-content">
+            <!-- Sección Dashboard Principal -->
+            <section id="dashboard-section" class="dashboard-panel active">
+                <header class="header">
+                    <div class="header-title">Bienvenido a TaskFlow</div>
+                </header>
+                <div id="dashboard-content-dinamico">
+                    <!-- Contenido dinámico según rol -->
+                </div>
+            </section>
+
+            <!-- ===== SECCIONES PARA ADMINISTRADOR ===== -->
+            <div id="admin-sections">
+                <!-- Gestión de Empleados - Solo Admin -->
+                <section id="empleados-section" class="dashboard-panel">
+                    <h2>Gestión de Empleados</h2>
+                    <div class="registro-empleado">
+                        <h3>Crear Nuevo Empleado</h3>
+                        <form id="formEmpleado">
+                            <div class="form-row">
+                                <input type="text" id="nombreEmpleado" placeholder="Nombre completo" required>
+                                <input type="text" id="cargoEmpleado" placeholder="Cargo" required>
+                            </div>
+                            <div class="form-row">
+                                <input type="email" id="emailEmpleado" placeholder="Email corporativo" required>
+                                <input type="text" id="usuarioEmpleado" placeholder="Usuario para login" required>
+                            </div>
+                            <div class="form-row">
+                                <input type="password" id="passwordEmpleado" placeholder="Contraseña temporal" required>
+                            </div>
+                            <button type="submit" class="btn-primary">Crear Empleado</button>
+                        </form>
+                    </div>
+
+                    <div class="listado-empleados">
+                        <h3>Lista de Empleados</h3>
+                        <table class="tabla-empleados">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Cargo</th>
+                                    <th>Email</th>
+                                    <th>Usuario</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listaEmpleados"></tbody>
+                        </table>
+                        <p id="noEmpleados" class="no-data">No hay empleados registrados.</p>
+                    </div>
+                </section>
+
+                <!-- Reportes Avanzados - Solo Admin -->
+                <section id="reportes-avanzados-section" class="dashboard-panel">
+                    <h2>Reportes Avanzados</h2>
+                    <div class="metricas-admin">
+                        <div class="metrica-card">
+                            <h3>📊 Productividad por Empleado</h3>
+                            <div id="productividadEmpleados" class="metrica-content">
+                                <p>Cargando estadísticas...</p>
+                            </div>
+                        </div>
+                        <div class="metrica-card">
+                            <h3>📈 Tareas por Estado</h3>
+                            <div id="tareasPorEstado" class="metrica-content">
+                                <p>Cargando distribución...</p>
+                            </div>
+                        </div>
+                        <div class="metrica-card">
+                            <h3>⏰ Tiempos Promedio</h3>
+                            <div id="tiemposPromedio" class="metrica-content">
+                                <p>Analizando tiempos...</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ===== SECCIONES PARA EMPLEADO ===== -->
+            <div id="empleado-sections">
+                <!-- Mis Tareas - Solo Empleado -->
+                <section id="mis-tareas-section" class="dashboard-panel">
+                    <h2>Mis Tareas Asignadas</h2>
+                    <div class="filtros-tareas-personales">
+                        <button class="filtro-btn personal selected" data-estado="todas">Todas</button>
+                        <button class="filtro-btn personal" data-estado="Pendiente">Pendientes</button>
+                        <button class="filtro-btn personal" data-estado="Progreso">En Progreso</button>
+                        <button class="filtro-btn personal" data-estado="Completada">Completadas</button>
+                    </div>
+                    <div class="mis-tareas-listado">
+                        <div id="listaMisTareas"></div>
+                        <p id="noMisTareas" class="no-data">No tienes tareas asignadas en este momento.</p>
+                    </div>
+                </section>
+
+                <!-- Mi Calendario - Solo Empleado -->
+                <section id="mi-calendario-section" class="dashboard-panel">
+                    <h2>Mi Calendario</h2>
+                    <div class="calendario-header">
+                        <h3>Próximos Vencimientos</h3>
+                    </div>
+                    <div id="calendarioVencimientos" class="calendario-content">
+                        <p>Cargando tus fechas importantes...</p>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ===== SECCIONES COMUNES ===== -->
+            
+            <!-- Gestión de Tareas - Común pero con permisos diferentes -->
+            <section id="tareas-section" class="dashboard-panel">
+                <h2>Tareas</h2>
+                
+                <!-- Formulario de tareas (solo visible para admin) -->
+                <div id="formulario-tarea-admin" class="admin-only">
+                    <section class="registro-tarea">
+                        <h3>Crear nueva tarea</h3>
+                        <form id="formTarea">
+                            <input type="text" id="titulo" placeholder="Título de la tarea" required>
+                            <textarea id="descripcion" placeholder="Descripción de la tarea" required></textarea>
+                            <div class="form-row">
+                                <input type="text" id="responsable" placeholder="Responsable o empleado" required>
+                                <input type="date" id="fecha" required>
+                            </div>
+                            <select id="prioridad" required>
+                                <option value="">Prioridad</option>
+                                <option value="Alta">Alta</option>
+                                <option value="Media">Media</option>
+                                <option value="Baja">Baja</option>
+                            </select>
+                            <button type="submit" class="btn-primary">Agregar Tarea</button>
+                        </form>
+                    </section>
+                </div>
+
+                <section class="filtros">
+                    <h3>Filtrar tareas</h3>
+                    <button class="filtro-btn selected" data-estado="todas">Todas</button>
+                    <button class="filtro-btn" data-estado="Pendiente">Pendiente</button>
+                    <button class="filtro-btn" data-estado="Progreso">En Progreso</button>
+                    <button class="filtro-btn" data-estado="Completada">Completada</button>
+                </section>
+
+                <section class="listado-tareas">
+                    <h3>Listado de tareas</h3>
+                    <ul id="listaTareas"></ul>
+                    <p id="noTareas" class="no-data">No hay tareas registradas.</p>
+                </section>
+            </section>
+
+            <!-- Reportes Básicos - Común -->
+            <section id="reportes-section" class="dashboard-panel">
+                <h2>Reportes</h2>
+                
+                <div class="reportes-header">
+                    <h3>Resumen de tareas</h3>
+                    <button id="btnExportarExcel" class="btn-exportar">Exportar tareas a Excel</button>
+                </div>
+                
+                <table class="tabla-reportes">
+                    <thead>
+                        <tr>
+                            <th>Total</th>
+                            <th>Pendientes</th>
+                            <th>En Progreso</th>
+                            <th>Completadas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="reporteTotal">0</td>
+                            <td id="reportePendiente">0</td>
+                            <td id="reporteProgreso">0</td>
+                            <td id="reporteCompletada">0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div id="reporte-empleados" class="admin-only">
+                    <h3>Empleados registrados</h3>
+                    <table class="tabla-reportes">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cargo</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody id="empleadosReporte"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Mi Cuenta - Común -->
+            <section id="micuenta-section" class="dashboard-panel">
+                <h2>Mi Cuenta</h2>
+                
+                <div class="perfil-card">
+                    <div class="perfil-header">
+                        <div class="avatar" id="userAvatar">A</div>
+                        <div class="perfil-info">
+                            <h3 id="miUsuarioNombre">Usuario</h3>
+                            <p id="miUsuarioRol">Sistema TaskFlow</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-usuario">
+                        <p><strong>Usuario:</strong> <span id="miUsuario"></span></p>
+                        <p><strong>Rol:</strong> <span id="miRol">Cargando...</span></p>
+                        <p><strong>Email:</strong> <span id="miEmail">Cargando...</span></p>
+                        <p><strong>Último acceso:</strong> <span id="ultimoAcceso">Hoy</span></p>
+                    </div>
+                </div>
+
+                <div class="form-cambiar-clave">
+                    <h3>Cambiar Contraseña</h3>
+                    <form id="formCambiarClave">
+                        <div class="form-group">
+                            <label for="claveActual">Contraseña Actual</label>
+                            <input type="password" id="claveActual" placeholder="Ingresa tu contraseña actual" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="claveNueva">Nueva Contraseña</label>
+                            <input type="password" id="claveNueva" placeholder="Ingresa tu nueva contraseña" required>
+                            <small>La contraseña debe tener al menos 6 caracteres</small>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Cambiar Contraseña</button>
+                    </form>
+                    <div id="cambioClaveMsg"></div>
+                </div>
+
+                <!-- Opción para subir foto de perfil -->
+                <div class="form-foto-perfil">
+                    <h3>Foto de Perfil</h3>
+                    <div class="foto-upload">
+                        <div class="avatar-preview">
+                            <div class="avatar" id="avatarPreview">A</div>
+                        </div>
+                        <div class="upload-controls">
+                            <input type="file" id="fotoPerfil" accept="image/*" style="display: none;">
+                            <button type="button" id="btnSeleccionarFoto" class="btn-secondary">Seleccionar Foto</button>
+                            <button type="button" id="btnEliminarFoto" class="btn-secondary btn-danger">Eliminar Foto</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ===== CHATBOT FLOTANTE ===== -->
+    <div id="chatbot-container">
+        <div id="chatbot-icon">🤖</div>
+        <div id="chatbot-window">
+            <div id="chatbot-header">
+                <span>Asistente Virtual TaskFlow</span>
+                <button id="close-chatbot">&times;</button>
+            </div>
+            <div id="chatbot-messages"></div>
+            <div id="chatbot-input">
+                <input type="text" id="chatbot-user-input" placeholder="Escribe tu consulta...">
+                <button id="chatbot-send">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
